@@ -1,0 +1,125 @@
+#include<iostream>
+#include<Windows.h>
+
+using namespace std;
+
+template<class T>
+struct BinaryTreeNode
+{
+	typedef BinaryTreeNode Node;
+public:
+
+	BinaryTreeNode(const T& k)
+		:_left(NULL)
+		, _right(NULL)
+		, val(k)
+	{}
+	Node* _left;
+	Node* _right;
+	T val;
+};
+
+template<class T>
+class BinaryTree
+{
+	typedef BinaryTreeNode<T> Node;
+
+public:
+	BinaryTree()
+		:_root(NULL)
+	{}
+
+	BinaryTree(T* a, size_t n, const T& invalid)
+	{
+		size_t index = 0;
+		_root = CreatTree(a, n, invalid, index);
+	}
+	void proprint()
+	{
+		Proprint(_root);
+	}
+	void posprint()
+	{
+		Posprint(_root);
+	}
+	void print()
+	{
+		Print(_root);
+	}
+	size_t size()
+	{
+		return _size(_root);
+	}
+	size_t leafsize()
+	{
+		return _leafsize(_root);
+	}
+private:
+	size_t _size(Node* root)
+	{
+		if (root == NULL)
+			return 0;
+
+		return _size(root->_left) + 1 + _size(root->_right);
+	}
+	Node* CreatTree(T* a, size_t n, const T& invalid, size_t& index)
+	{
+		Node* root = NULL;
+		if (index < n && a[index] != invalid)
+		{
+			root = new Node(a[index]);
+			root->_left = CreatTree(a, n, invalid, ++index);
+			root->_right = CreatTree(a, n, invalid, ++index);
+		}
+		return root;
+	}
+	void Proprint(Node* root)
+	{
+		if (root == NULL)
+		{
+			return;
+		}
+
+		cout << root->val << " ";
+		Proprint(root->_left);
+		Proprint(root->_right);
+	}
+	size_t _leafsize(Node* root,size_t& count)
+	{
+	}
+
+	
+	void Posprint(Node* root)
+	{
+		if (root == NULL)
+		{
+			return;
+		}
+		Posprint(root->_left);
+		cout << root->val << " ";
+		Posprint(root->_right);
+	}
+
+	void Print(Node* root)
+	{
+		if (root == NULL)
+		{
+			return;
+		}
+		Print(root->_left);
+		Print(root->_right);
+		cout << root->val << " ";
+	}
+
+private:
+	Node* _root;
+};
+
+void Test()
+{
+	int array[10] = { 1, 2, 3, '#', '#', 4, '#', '#', 5, 6 };
+	BinaryTree<int> t1(array, sizeof(array) / sizeof(array[0]), '#');
+	cout << t1.size() << endl;
+	cout << t1.leafsize() << endl;
+	system("pause");
+}
